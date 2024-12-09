@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    app:strokeWidth="2dp"
+    app:strokeColor="@color/brown"
+    app:cardBackgroundColor="@color/light_beige">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- תמונה -->
+        <ImageView
+            android:id="@+id/food_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ham" />
+
+        <!-- שם המנה -->
+        <TextView
+            android:id="@+id/food_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="8dp"
+            android:text="Steak Platter"
+            android:textColor="@color/dark_brown"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- מחיר המנה -->
+        <TextView
+            android:id="@+id/food_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="8dp"
+            android:text="$25.99"
+            android:textColor="@color/price_red"
+            android:textSize="16sp" />
+
+        <!-- כפתור "פרטים נוספים" -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_view_details"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="View Details"
+            android:textColor="@color/brown"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/brown"
+            app:strokeWidth="1dp" />
+
+        <!-- כפתור "הזמנה" -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_order"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/brown"
+            android:text="Order Now"
+            android:textColor="@android:color/white"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
