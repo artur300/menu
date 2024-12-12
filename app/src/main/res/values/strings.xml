@@ -1,14 +1,37 @@
 <resources>
-    <string name="app_name">menu</string>
+    <!-- App Name -->
+    <string name="app_name">Menu</string>
+
+    <!-- Food Labels -->
     <string name="food_name">Food Name</string>
     <string name="unknown_food">Unknown Food</string>
+
+    <!-- Formatting and Messages -->
     <string name="price_format">Price: %1$s</string>
-    <string name="view_details_message">View Details: %1$s</string>
-    <string name="order_message">Order: %1$s</string>
-    <string name="food_description_pizza">A classic Italian pizza with mozzarella cheese and fresh tomatoes.</string>
-    <string name="food_description_burger">A juicy beef burger with fresh lettuce, tomatoes, and our secret sauce.</string>
-    <string name="food_description_sushi">Delicate sushi rolls made with fresh fish and premium rice.</string>
-    <string name="food_description_default">Delicious and freshly made food.</string>
+    <string name="view_details_message">Viewing Details: %1$s</string>
+    <string name="order_message">Ordered: %1$s</string>
+
+    <!-- Food Descriptions -->
+    <string name="food_description_pizza">
+        Indulge in our classic Italian pizza, crafted with a thin, crispy crust baked to perfection.
+        Topped generously with creamy mozzarella cheese, fresh vine-ripened tomatoes, and a hint of Italian herbs,
+        this pizza delivers an authentic taste of Italy in every bite.
+    </string>
+    <string name="food_description_burger">
+        Savor the ultimate comfort food with our juicy, flame-grilled beef burger.
+        Layered with fresh, crunchy lettuce, ripe red tomatoes, and pickles, all drizzled with our house-made secret sauce,
+        this burger is a flavor explosion served on a soft, toasted brioche bun.
+    </string>
+    <string name="food_description_sushi">
+        Delight in our delicate sushi rolls, hand-crafted with premium-grade sushi rice and the freshest fish available.
+        Each roll is carefully balanced with flavors and textures, combining crisp cucumber, creamy avocado, and tender fish.
+        A touch of wasabi and soy sauce brings out the exquisite taste, making it a must-try for sushi enthusiasts.
+    </string>
+    <string name="food_description_default">
+        Enjoy our delicious and freshly made dishes, prepared with the highest quality ingredients to bring you a delightful experience.
+    </string>
+
+    <!-- Buttons and Accessibility -->
     <string name="back">Back</string>
     <string name="food_image_description">Image of the food</string>
 </resources>
