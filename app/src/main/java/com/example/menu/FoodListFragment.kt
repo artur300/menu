@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import android.widget.Toast
 import android.media.MediaPlayer
 import com.example.menu.databinding.FragmentFoodListBinding
+import android.view.animation.AnimationUtils
 
 class FoodListFragment : Fragment() {
+    private var isMenuOpen = false
     private lateinit var binding: FragmentFoodListBinding
     private lateinit var adapter: FoodAdapter
     private lateinit var mediaPlayer: MediaPlayer
@@ -29,6 +31,13 @@ class FoodListFragment : Fragment() {
     ): View {
         // אתחול ה-Binding
         binding = FragmentFoodListBinding.inflate(inflater, container, false)
+
+
+
+        // הגדרת Listener לאייקון
+        binding.menuIcon.setOnClickListener {
+            toggleMenuAnimation(it)
+        }
         val view = binding.root
 
         // הגדרת MediaPlayer
@@ -60,11 +69,34 @@ class FoodListFragment : Fragment() {
             }
         })
 
-        binding.recyclerView.layoutManager = GridLayoutManager(context, 2) // 2 פריטים בשורה
+        binding.recyclerView.layoutManager = GridLayoutManager(context, 1) // 2 פריטים בשורה
         binding.recyclerView.adapter = adapter
 
         return view
     }
+
+
+
+    private fun toggleMenuAnimation(view: View) {
+        val animation = if (isMenuOpen) {
+            AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_close)
+        } else {
+            AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_open)
+        }
+        view.startAnimation(animation)
+        isMenuOpen = !isMenuOpen
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     override fun onPause() {
         super.onPause()
