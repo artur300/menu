@@ -1,13 +1,11 @@
 package com.example.menu
+
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Button
 import android.media.MediaPlayer
-
+import androidx.appcompat.app.AppCompatActivity
+import com.example.menu.databinding.ItemFoodCardBinding
 
 class FoodAdapter(
     private val foods: List<Food>,
@@ -15,33 +13,41 @@ class FoodAdapter(
     private val onOrderClick: (Food) -> Unit
 ) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
 
-    class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val image: ImageView = itemView.findViewById(R.id.food_image)
-        val name: TextView = itemView.findViewById(R.id.food_name)
-        val price: TextView = itemView.findViewById(R.id.food_price)
-        val viewDetails: Button = itemView.findViewById(R.id.btn_view_details)
-        val order: Button = itemView.findViewById(R.id.btn_order)
-    }
+    // שימוש ב-Binding עבור ה-ViewHolder
+    class FoodViewHolder(val binding: ItemFoodCardBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_food_card, parent, false)
-        return FoodViewHolder(view)
+        val binding = ItemFoodCardBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return FoodViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
         val food = foods[position]
-        holder.name.text = food.name
-        holder.price.text = food.price
-        holder.image.setImageResource(food.imageResId) // תשתמש בנתוני התמונה
-        holder.viewDetails.setOnClickListener { onViewDetailsClick(food) }
-        holder.order.setOnClickListener {
 
+        // הגדרת הנתונים ב-UI באמצעות Binding
+        holder.binding.foodName.text = food.name
+        holder.binding.foodPrice.text = food.price
+        holder.binding.foodImage.setImageResource(food.imageResId)
 
+        // טיפול בלחיצה על View Details
+        holder.binding.btnViewDetails.setOnClickListener {
+            val fragment = FoodDetailsFragment.newInstance(food)
+            val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
+            fragmentManager.beginTransaction()
+                .replace(R.id.main, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // טיפול בלחיצה על Order
+        holder.binding.btnOrder.setOnClickListener {
             val mediaPlayer = MediaPlayer.create(holder.itemView.context, R.raw.yeehaw)
             mediaPlayer.start()
-            mediaPlayer.setOnCompletionListener {it.release()}
-
+            mediaPlayer.setOnCompletionListener { it.release() }
 
             onOrderClick(food)
         }
@@ -49,3 +55,4 @@ class FoodAdapter(
 
     override fun getItemCount(): Int = foods.size
 }
+

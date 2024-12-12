@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">menu</string>
+    <string name="food_name">Food Name</string>
+    <string name="unknown_food">Unknown Food</string>
+    <string name="price_format">Price: %1$s</string>
+    <string name="view_details_message">View Details: %1$s</string>
+    <string name="order_message">Order: %1$s</string>
 </resources>
