@@ -5,4 +5,10 @@
     <string name="price_format">Price: %1$s</string>
     <string name="view_details_message">View Details: %1$s</string>
     <string name="order_message">Order: %1$s</string>
+    <string name="food_description_pizza">A classic Italian pizza with mozzarella cheese and fresh tomatoes.</string>
+    <string name="food_description_burger">A juicy beef burger with fresh lettuce, tomatoes, and our secret sauce.</string>
+    <string name="food_description_sushi">Delicate sushi rolls made with fresh fish and premium rice.</string>
+    <string name="food_description_default">Delicious and freshly made food.</string>
+    <string name="back">Back</string>
+    <string name="food_image_description">Image of the food</string>
 </resources>

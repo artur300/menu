@@ -12,37 +12,43 @@ class FoodDetailsFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        // אתחול View Binding
+        // אתחול ה-Binding
         _binding = FragmentFoodDetailsBinding.inflate(inflater, container, false)
 
         // קבלת הנתונים שנשלחו
         val foodName = arguments?.getString("FOOD_NAME")
         val foodPrice = arguments?.getString("FOOD_PRICE")
         val foodImage = arguments?.getInt("FOOD_IMAGE")
+        val foodDescription = arguments?.getString("FOOD_DESCRIPTION")
 
-        // קישור רכיבי ה-UI והצגת הנתונים
-        binding.foodName.text = foodName ?: getString(R.string.unknown_food) // לוקליזציה
-        binding.foodPrice.text = getString(R.string.price_format, foodPrice ?: "N/A") // לוקליזציה עם תבנית
+        // עדכון UI עם נתוני המנה
+        binding.foodName.text = foodName
         foodImage?.let { binding.foodImage.setImageResource(it) }
+        binding.foodDescription.text = foodDescription
+
+        // כפתור חזרה
+        binding.btnBack.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
 
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // ניקוי ה-Binding
+        _binding = null
     }
 
     companion object {
-        fun newInstance(food: Food): FoodDetailsFragment {
+        fun newInstance(food: Food, description: String): FoodDetailsFragment {
             val fragment = FoodDetailsFragment()
             val bundle = Bundle()
             bundle.putString("FOOD_NAME", food.name)
             bundle.putString("FOOD_PRICE", food.price)
             bundle.putInt("FOOD_IMAGE", food.imageResId)
+            bundle.putString("FOOD_DESCRIPTION", description)
             fragment.arguments = bundle
             return fragment
         }

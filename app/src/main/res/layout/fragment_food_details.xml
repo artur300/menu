@@ -4,37 +4,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_beige"
     android:padding="16dp">
 
+    <!-- תמונה של המנה עם מסגרת -->
     <ImageView
         android:id="@+id/food_image"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/image_border"
+        android:contentDescription="@string/food_image_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-       />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- שם המנה -->
     <TextView
         android:id="@+id/food_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/food_name"
-        android:textSize="24sp"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/dark_brown"
+        android:background="@drawable/name_background"
+        android:padding="8dp"
         app:layout_constraintTop_toBottomOf="@id/food_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="16dp" />
 
+    <!-- תיאור המנה -->
     <TextView
-        android:id="@+id/food_price"
-        android:layout_width="wrap_content"
+        android:id="@+id/food_description"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Price: $10"
         android:textSize="18sp"
+        android:textColor="@color/black"
+        android:background="@drawable/description_background"
+        android:padding="12dp"
         app:layout_constraintTop_toBottomOf="@id/food_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Delicious and freshly made with high-quality ingredients." />
 
+    <!-- כפתור חזרה -->
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:backgroundTint="@color/dark_brown"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/food_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:paddingVertical="12dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

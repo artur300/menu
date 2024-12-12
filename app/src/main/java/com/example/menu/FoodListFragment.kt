@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import android.widget.Toast
 import android.media.MediaPlayer
+import androidx.appcompat.app.AlertDialog
+import android.animation.ObjectAnimator
 import com.example.menu.databinding.FragmentFoodListBinding
-import android.view.animation.AnimationUtils
 
 class FoodListFragment : Fragment() {
     private var isMenuOpen = false
@@ -32,12 +32,15 @@ class FoodListFragment : Fragment() {
         // אתחול ה-Binding
         binding = FragmentFoodListBinding.inflate(inflater, container, false)
 
-
-
-        // הגדרת Listener לאייקון
+        // Listener לאייקון התפריט
         binding.menuIcon.setOnClickListener {
-            toggleMenuAnimation(it)
+            isMenuOpen = !isMenuOpen // שינוי המצב (פתיחה/סגירה)
+            toggleMenuAnimation(it, isMenuOpen) // הפעלת האנימציה
+            if (isMenuOpen) {
+                showMenuDialog() // הצגת התפריט
+            }
         }
+
         val view = binding.root
 
         // הגדרת MediaPlayer
@@ -49,54 +52,60 @@ class FoodListFragment : Fragment() {
         val foodList = listOf(
             Food("Pizza", "$10", R.drawable.pizza),
             Food("Burger", "$8", R.drawable.ham),
-            Food("Sushi", "$12", R.drawable.sushi),
-            Food("Pizza", "$10", R.drawable.pizza),
-            Food("Burger", "$8", R.drawable.ham),
             Food("Sushi", "$12", R.drawable.sushi)
         )
 
         // אתחול ה-RecyclerView
         adapter = FoodAdapter(foodList, { food ->
-            context?.let {
-                val message = it.getString(R.string.view_details_message, food.name)
-                Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
-            }
+            // פעולה לדוגמה
         }, { food ->
-            addToCart(food) // הוספה לעגלה בעת לחיצה על "Order Now"
-            context?.let {
-                val message = it.getString(R.string.order_message, food.name)
-                Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
-            }
+            addToCart(food) // הוספה לעגלה
         })
 
-        binding.recyclerView.layoutManager = GridLayoutManager(context, 1) // 2 פריטים בשורה
+        binding.recyclerView.layoutManager = GridLayoutManager(context, 1)
         binding.recyclerView.adapter = adapter
 
         return view
     }
 
-
-
-    private fun toggleMenuAnimation(view: View) {
-        val animation = if (isMenuOpen) {
-            AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_close)
-        } else {
-            AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_open)
+    private fun toggleMenuAnimation(view: View, isOpening: Boolean) {
+        val rotationAngle = if (isOpening) 90f else 0f // סיבוב ל-90 מעלות כשנפתח
+        ObjectAnimator.ofFloat(view, "rotation", rotationAngle).apply {
+            duration = 300 // משך האנימציה
+            start()
         }
-        view.startAnimation(animation)
-        isMenuOpen = !isMenuOpen
     }
 
+    private fun showMenuDialog() {
+        // שימוש בעיצוב מותאם אישית
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_menu, null)
 
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView) // שימוש ב-Layout מותאם
+            .create()
 
+        // קישור כפתורים מתוך ה-Layout
+        dialogView.findViewById<View>(R.id.btn_view_order).setOnClickListener {
+            // פעולה לבחירת "View Order"
+            dialog.dismiss()
+        }
+        dialogView.findViewById<View>(R.id.btn_go_back).setOnClickListener {
+            // פעולה לבחירת "Go Back"
+            dialog.dismiss()
+        }
+        dialogView.findViewById<View>(R.id.btn_settings).setOnClickListener {
+            // פעולה לבחירת "Settings"
+            dialog.dismiss()
+        }
 
+        // מאזין לסגירת הדיאלוג
+        dialog.setOnDismissListener {
+            isMenuOpen = false // עדכון מצב התפריט
+            toggleMenuAnimation(binding.menuIcon, false) // החזרת האייקון למצבו המקורי
+        }
 
-
-
-
-
-
-
+        dialog.show()
+    }
 
     override fun onPause() {
         super.onPause()

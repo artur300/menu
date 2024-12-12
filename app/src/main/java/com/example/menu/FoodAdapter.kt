@@ -35,7 +35,14 @@ class FoodAdapter(
 
         // טיפול בלחיצה על View Details
         holder.binding.btnViewDetails.setOnClickListener {
-            val fragment = FoodDetailsFragment.newInstance(food)
+            val description = when (food.name) {
+                "Pizza" -> holder.itemView.context.getString(R.string.food_description_pizza)
+                "Burger" -> holder.itemView.context.getString(R.string.food_description_burger)
+                "Sushi" -> holder.itemView.context.getString(R.string.food_description_sushi)
+                else -> holder.itemView.context.getString(R.string.food_description_default)
+            }
+
+            val fragment = FoodDetailsFragment.newInstance(food, description)
             val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
             fragmentManager.beginTransaction()
                 .replace(R.id.main, fragment)
@@ -55,4 +62,3 @@ class FoodAdapter(
 
     override fun getItemCount(): Int = foods.size
 }
-
