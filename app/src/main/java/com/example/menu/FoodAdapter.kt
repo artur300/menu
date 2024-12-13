@@ -8,7 +8,6 @@ import com.example.menu.databinding.ItemFoodCardBinding
 
 class FoodAdapter(
     private val foods: MutableList<Food>,
-    private val onViewDetailsClick: (Food) -> Unit,
     private val onDeleteClick: (Food) -> Unit,
     private val onEditClick: (Food) -> Unit
 ) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
@@ -25,10 +24,6 @@ class FoodAdapter(
         holder.binding.foodName.text = food.name
         food.imageUri?.let {
             holder.binding.foodImage.setImageURI(Uri.parse(it))
-        }
-
-        holder.binding.btnViewDetails.setOnClickListener {
-            onViewDetailsClick(food)
         }
 
         holder.binding.btnEdit.setOnClickListener {

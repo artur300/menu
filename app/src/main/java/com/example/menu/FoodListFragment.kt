@@ -36,28 +36,24 @@ class FoodListFragment : Fragment() {
     ): View {
         binding = FragmentFoodListBinding.inflate(inflater, container, false)
 
-        adapter = FoodAdapter(foodList, { food ->
-            // טיפול בלחיצה על "פרטים נוספים"
-        }, { food ->
-            // מחיקה
-            removeFood(food)
-        }, { food ->
-            // עריכה
-            showEditFoodDialog(food)
-        })
+        adapter = FoodAdapter(
+            foodList,
+            onDeleteClick = { food -> removeFood(food) },
+            onEditClick = { food -> showEditFoodDialog(food) }
+        )
 
         binding.recyclerView.layoutManager = GridLayoutManager(context, 1)
         binding.recyclerView.adapter = adapter
 
         binding.menuIcon.setOnClickListener {
-            showMenuDialog()
+            showAddFoodDialog()
         }
 
         return binding.root
     }
 
-    private fun addNewFood(name: String, price: String, imageUri: String) {
-        val newFood = Food(name, price, imageUri)
+    private fun addNewFood(name: String, imageUri: String) {
+        val newFood = Food(name = name, imageUri = imageUri)
         foodList.add(newFood)
         adapter.notifyItemInserted(foodList.size - 1)
     }
@@ -68,20 +64,6 @@ class FoodListFragment : Fragment() {
             foodList.removeAt(position)
             adapter.notifyItemRemoved(position)
         }
-    }
-
-    private fun showMenuDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_menu, null)
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .create()
-
-        dialogView.findViewById<View>(R.id.btn_add_new_food).setOnClickListener {
-            showAddFoodDialog()
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
     private fun showAddFoodDialog() {
@@ -99,10 +81,9 @@ class FoodListFragment : Fragment() {
 
         dialogView.findViewById<View>(R.id.btn_add_food).setOnClickListener {
             val name = dialogView.findViewById<EditText>(R.id.food_name_input).text.toString()
-            val price = dialogView.findViewById<EditText>(R.id.food_price_input).text.toString()
 
-            if (name.isNotBlank() && price.isNotBlank() && selectedImageUri != null) {
-                addNewFood(name, price, selectedImageUri.toString())
+            if (name.isNotBlank() && selectedImageUri != null) {
+                addNewFood(name, selectedImageUri.toString())
                 dialog.dismiss()
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields and select an image", Toast.LENGTH_SHORT).show()
@@ -120,12 +101,9 @@ class FoodListFragment : Fragment() {
 
         imagePreview = dialogView.findViewById(R.id.food_image_preview)
         val nameInput = dialogView.findViewById<EditText>(R.id.food_name_input)
-        val priceInput = dialogView.findViewById<EditText>(R.id.food_price_input)
         val pickImageButton = dialogView.findViewById<Button>(R.id.btn_pick_image)
 
-        // אתחול שדות עם הנתונים הקיימים
         nameInput.setText(food.name)
-        priceInput.setText(food.price)
         food.imageUri?.let {
             selectedImageUri = Uri.parse(it)
             imagePreview?.setImageURI(selectedImageUri)
@@ -137,13 +115,11 @@ class FoodListFragment : Fragment() {
 
         dialogView.findViewById<View>(R.id.btn_add_food).setOnClickListener {
             val newName = nameInput.text.toString()
-            val newPrice = priceInput.text.toString()
 
-            if (newName.isNotBlank() && newPrice.isNotBlank() && selectedImageUri != null) {
+            if (newName.isNotBlank() && selectedImageUri != null) {
                 food.name = newName
-                food.price = newPrice
                 food.imageUri = selectedImageUri.toString()
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(foodList.indexOf(food))
                 dialog.dismiss()
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields and select an image", Toast.LENGTH_SHORT).show()
