@@ -39,7 +39,8 @@ class FoodListFragment : Fragment() {
         adapter = FoodAdapter(
             foodList,
             onDeleteClick = { food -> removeFood(food) },
-            onEditClick = { food -> showEditFoodDialog(food) }
+            onEditClick = { food -> showEditFoodDialog(food) },
+            onViewDetailsClick = { food -> navigateToFoodDetails(food) } // נוספה פונקציית ניווט
         )
 
         binding.recyclerView.layoutManager = GridLayoutManager(context, 1)
@@ -128,4 +129,19 @@ class FoodListFragment : Fragment() {
 
         dialog.show()
     }
+
+    private fun navigateToFoodDetails(food: Food) {
+        // יצירת Bundle להעברת נתונים ל-Fragment החדש
+        val bundle = Bundle().apply {
+            putString("food_name", food.name)
+            putString("food_image_uri", food.imageUri)
+        }
+
+        // החלפת ה-Fragment
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.main, FoodDetailsFragment::class.java, bundle)
+            .addToBackStack(null)
+            .commit()
+    }
 }
+

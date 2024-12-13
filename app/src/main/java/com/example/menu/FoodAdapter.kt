@@ -9,7 +9,8 @@ import com.example.menu.databinding.ItemFoodCardBinding
 class FoodAdapter(
     private val foods: MutableList<Food>,
     private val onDeleteClick: (Food) -> Unit,
-    private val onEditClick: (Food) -> Unit
+    private val onEditClick: (Food) -> Unit,
+    private val onViewDetailsClick: (Food) -> Unit // Callback חדש
 ) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
 
     class FoodViewHolder(val binding: ItemFoodCardBinding) : RecyclerView.ViewHolder(binding.root)
@@ -33,8 +34,12 @@ class FoodAdapter(
         holder.binding.btnDelete.setOnClickListener {
             onDeleteClick(food)
         }
+
+        // טיפול בלחיצה על "View Details"
+        holder.binding.btnViewDetails.setOnClickListener {
+            onViewDetailsClick(food)
+        }
     }
 
     override fun getItemCount(): Int = foods.size
 }
-
