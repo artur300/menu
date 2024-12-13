@@ -23,7 +23,6 @@ class FoodAdapter(
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
         val food = foods[position]
         holder.binding.foodName.text = food.name
-        holder.binding.foodPrice.text = food.price
         food.imageUri?.let {
             holder.binding.foodImage.setImageURI(Uri.parse(it))
         }
