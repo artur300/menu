@@ -1,5 +1,6 @@
 package com.example.menu
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +21,12 @@ class FoodDetailsFragment : Fragment() {
         // קבלת הנתונים שנשלחו
         val foodName = arguments?.getString("FOOD_NAME")
         val foodPrice = arguments?.getString("FOOD_PRICE")
-        val foodImage = arguments?.getInt("FOOD_IMAGE")
+        val foodImageUri = arguments?.getString("FOOD_IMAGE_URI") // שימוש ב-imageUri
         val foodDescription = arguments?.getString("FOOD_DESCRIPTION")
 
         // עדכון UI עם נתוני המנה
         binding.foodName.text = foodName
-        foodImage?.let { binding.foodImage.setImageResource(it) }
+        foodImageUri?.let { binding.foodImage.setImageURI(Uri.parse(it)) } // טוען תמונה מ-URI
         binding.foodDescription.text = foodDescription
 
         // כפתור חזרה
@@ -47,10 +48,12 @@ class FoodDetailsFragment : Fragment() {
             val bundle = Bundle()
             bundle.putString("FOOD_NAME", food.name)
             bundle.putString("FOOD_PRICE", food.price)
-            bundle.putInt("FOOD_IMAGE", food.imageResId)
+            bundle.putString("FOOD_IMAGE_URI", food.imageUri) // שמירת ה-URI
             bundle.putString("FOOD_DESCRIPTION", description)
             fragment.arguments = bundle
             return fragment
         }
     }
 }
+
+

@@ -1,130 +1,103 @@
 package com.example.menu
 
+import android.net.Uri
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.os.Bundle
+import android.widget.ImageView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import android.media.MediaPlayer
-import androidx.appcompat.app.AlertDialog
-import android.animation.ObjectAnimator
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.menu.databinding.FragmentFoodListBinding
 
 class FoodListFragment : Fragment() {
-    private var isMenuOpen = false
+
     private lateinit var binding: FragmentFoodListBinding
     private lateinit var adapter: FoodAdapter
-    private lateinit var mediaPlayer: MediaPlayer
-    private var cartCount = 0
-    private val cartItems = mutableListOf<Food>()
+    private val foodList = mutableListOf<Food>()
 
-    private fun addToCart(food: Food) {
-        cartCount++
-        cartItems.add(food)
-        binding.cartCount.text = cartCount.toString() // עדכון המונה
-        CartAnimation.animateCartCount(binding.cartCount)
+    private var selectedImageUri: Uri? = null
+    private var imagePreview: ImageView? = null
+
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            selectedImageUri = uri
+            imagePreview?.setImageURI(uri)
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        // אתחול ה-Binding
         binding = FragmentFoodListBinding.inflate(inflater, container, false)
 
-        // Listener לאייקון התפריט
-        binding.menuIcon.setOnClickListener {
-            isMenuOpen = !isMenuOpen // שינוי המצב (פתיחה/סגירה)
-            toggleMenuAnimation(it, isMenuOpen) // הפעלת האנימציה
-            if (isMenuOpen) {
-                showMenuDialog() // הצגת התפריט
-            }
-        }
-
-        val view = binding.root
-
-        // הגדרת MediaPlayer
-        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.wild_west_music)
-        mediaPlayer.isLooping = true // הפעלת לולאה
-        mediaPlayer.start()
-
-        // יצירת רשימה לדוגמה
-        val foodList = listOf(
-            Food("Pizza", "$10", R.drawable.pizza),
-            Food("Burger", "$8", R.drawable.ham),
-            Food("Sushi", "$12", R.drawable.sushi)
-        )
-
-        // אתחול ה-RecyclerView
         adapter = FoodAdapter(foodList, { food ->
-            // פעולה לדוגמה
+            // טיפול בלחיצה על "פרטים נוספים"
         }, { food ->
-            addToCart(food) // הוספה לעגלה
+            // טיפול בלחיצה על "הזמנה"
         })
 
         binding.recyclerView.layoutManager = GridLayoutManager(context, 1)
         binding.recyclerView.adapter = adapter
 
-        return view
+        binding.menuIcon.setOnClickListener {
+            showMenuDialog()
+        }
+
+        return binding.root
     }
 
-    private fun toggleMenuAnimation(view: View, isOpening: Boolean) {
-        val rotationAngle = if (isOpening) 90f else 0f // סיבוב ל-90 מעלות כשנפתח
-        ObjectAnimator.ofFloat(view, "rotation", rotationAngle).apply {
-            duration = 300 // משך האנימציה
-            start()
-        }
+    private fun addNewFood(name: String, price: String, imageUri: String) {
+        val newFood = Food(name, price, imageUri)
+        foodList.add(newFood)
+        adapter.notifyItemInserted(foodList.size - 1)
     }
 
     private fun showMenuDialog() {
-        // שימוש בעיצוב מותאם אישית
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_menu, null)
-
         val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView) // שימוש ב-Layout מותאם
+            .setView(dialogView)
             .create()
 
-        // קישור כפתורים מתוך ה-Layout
-        dialogView.findViewById<View>(R.id.btn_view_order).setOnClickListener {
-            // פעולה לבחירת "View Order"
+        dialogView.findViewById<View>(R.id.btn_add_new_food).setOnClickListener {
+            showAddFoodDialog()
             dialog.dismiss()
-        }
-        dialogView.findViewById<View>(R.id.btn_go_back).setOnClickListener {
-            // פעולה לבחירת "Go Back"
-            dialog.dismiss()
-        }
-        dialogView.findViewById<View>(R.id.btn_settings).setOnClickListener {
-            // פעולה לבחירת "Settings"
-            dialog.dismiss()
-        }
-
-        // מאזין לסגירת הדיאלוג
-        dialog.setOnDismissListener {
-            isMenuOpen = false // עדכון מצב התפריט
-            toggleMenuAnimation(binding.menuIcon, false) // החזרת האייקון למצבו המקורי
         }
 
         dialog.show()
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (::mediaPlayer.isInitialized && mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-        }
-    }
+    private fun showAddFoodDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_food_dialog, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        if (::mediaPlayer.isInitialized) {
-            mediaPlayer.release()
-        }
-    }
+        imagePreview = dialogView.findViewById(R.id.food_image_preview)
+        val pickImageButton = dialogView.findViewById<Button>(R.id.btn_pick_image)
 
-    override fun onResume() {
-        super.onResume()
-        if (::mediaPlayer.isInitialized && !mediaPlayer.isPlaying) {
-            mediaPlayer.start()
+        pickImageButton.setOnClickListener {
+            pickImageLauncher.launch("image/*")
         }
+
+        dialogView.findViewById<View>(R.id.btn_add_food).setOnClickListener {
+            val name = dialogView.findViewById<EditText>(R.id.food_name_input).text.toString()
+            val price = dialogView.findViewById<EditText>(R.id.food_price_input).text.toString()
+
+            if (name.isNotBlank() && price.isNotBlank() && selectedImageUri != null) {
+                addNewFood(name, price, selectedImageUri.toString())
+                dialog.dismiss()
+            } else {
+                Toast.makeText(requireContext(), "Please fill all fields and select an image", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
     }
 }
+

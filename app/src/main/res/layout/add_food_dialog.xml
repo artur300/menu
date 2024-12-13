@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/food_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Food Name" />
+
+    <EditText
+        android:id="@+id/food_price_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Food Price" />
+
+    <Button
+        android:id="@+id/btn_pick_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pick Image" />
+
+    <ImageView
+        android:id="@+id/food_image_preview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Preview" />
+
+    <Button
+        android:id="@+id/btn_add_food"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Food"
+        android:layout_marginTop="16dp" />
+</LinearLayout>
+
