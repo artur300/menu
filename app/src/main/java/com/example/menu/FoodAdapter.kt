@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.menu.databinding.ItemFoodCardBinding
 
 class FoodAdapter(
-    private val foods: List<Food>,
+    private val foods: MutableList<Food>,
     private val onViewDetailsClick: (Food) -> Unit,
-    private val onOrderClick: (Food) -> Unit
+    private val onDeleteClick: (Food) -> Unit,
+    private val onEditClick: (Food) -> Unit
 ) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
 
     class FoodViewHolder(val binding: ItemFoodCardBinding) : RecyclerView.ViewHolder(binding.root)
@@ -21,28 +22,25 @@ class FoodAdapter(
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
         val food = foods[position]
-
-        // עדכון שם ומחיר המנה
         holder.binding.foodName.text = food.name
         holder.binding.foodPrice.text = food.price
-
-        // עדכון התמונה: תמונה מ-URI אם קיימת, אחרת תמונה דיפולטיבית
-        if (!food.imageUri.isNullOrEmpty()) {
-            holder.binding.foodImage.setImageURI(Uri.parse(food.imageUri))
-        } else {
-            holder.binding.foodImage.setImageResource(R.drawable.ic_launcher_foreground) // תמונה דיפולטיבית
+        food.imageUri?.let {
+            holder.binding.foodImage.setImageURI(Uri.parse(it))
         }
 
-        // מאזין ללחיצה על כפתור פרטים נוספים
         holder.binding.btnViewDetails.setOnClickListener {
             onViewDetailsClick(food)
         }
 
-        // מאזין ללחיצה על כפתור הזמנה
-        holder.binding.btnOrder.setOnClickListener {
-            onOrderClick(food)
+        holder.binding.btnEdit.setOnClickListener {
+            onEditClick(food)
+        }
+
+        holder.binding.btnDelete.setOnClickListener {
+            onDeleteClick(food)
         }
     }
 
     override fun getItemCount(): Int = foods.size
 }
+

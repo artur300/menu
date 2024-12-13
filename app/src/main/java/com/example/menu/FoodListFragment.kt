@@ -39,7 +39,11 @@ class FoodListFragment : Fragment() {
         adapter = FoodAdapter(foodList, { food ->
             // טיפול בלחיצה על "פרטים נוספים"
         }, { food ->
-            // טיפול בלחיצה על "הזמנה"
+            // מחיקה
+            removeFood(food)
+        }, { food ->
+            // עריכה
+            showEditFoodDialog(food)
         })
 
         binding.recyclerView.layoutManager = GridLayoutManager(context, 1)
@@ -56,6 +60,14 @@ class FoodListFragment : Fragment() {
         val newFood = Food(name, price, imageUri)
         foodList.add(newFood)
         adapter.notifyItemInserted(foodList.size - 1)
+    }
+
+    private fun removeFood(food: Food) {
+        val position = foodList.indexOf(food)
+        if (position != -1) {
+            foodList.removeAt(position)
+            adapter.notifyItemRemoved(position)
+        }
     }
 
     private fun showMenuDialog() {
@@ -99,5 +111,45 @@ class FoodListFragment : Fragment() {
 
         dialog.show()
     }
-}
 
+    private fun showEditFoodDialog(food: Food) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.add_food_dialog, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        imagePreview = dialogView.findViewById(R.id.food_image_preview)
+        val nameInput = dialogView.findViewById<EditText>(R.id.food_name_input)
+        val priceInput = dialogView.findViewById<EditText>(R.id.food_price_input)
+        val pickImageButton = dialogView.findViewById<Button>(R.id.btn_pick_image)
+
+        // אתחול שדות עם הנתונים הקיימים
+        nameInput.setText(food.name)
+        priceInput.setText(food.price)
+        food.imageUri?.let {
+            selectedImageUri = Uri.parse(it)
+            imagePreview?.setImageURI(selectedImageUri)
+        }
+
+        pickImageButton.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
+        dialogView.findViewById<View>(R.id.btn_add_food).setOnClickListener {
+            val newName = nameInput.text.toString()
+            val newPrice = priceInput.text.toString()
+
+            if (newName.isNotBlank() && newPrice.isNotBlank() && selectedImageUri != null) {
+                food.name = newName
+                food.price = newPrice
+                food.imageUri = selectedImageUri.toString()
+                adapter.notifyDataSetChanged()
+                dialog.dismiss()
+            } else {
+                Toast.makeText(requireContext(), "Please fill all fields and select an image", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
+    }
+}
