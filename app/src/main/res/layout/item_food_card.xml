@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ham" />
+            android:src="@drawable/ic_launcher_foreground" />
 
         <!-- שם המנה -->
         <TextView
@@ -37,16 +37,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- מחיר המנה -->
-        <TextView
-            android:id="@+id/food_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingBottom="8dp"
-            android:text="$25.99"
-            android:textColor="@color/price_red"
-            android:textSize="16sp" />
+
 
         <!-- כפתור "פרטים נוספים" -->
         <com.google.android.material.button.MaterialButton
@@ -61,15 +52,27 @@
             app:strokeColor="@color/brown"
             app:strokeWidth="1dp" />
 
-        <!-- כפתור "הזמנה" -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_order"
+            android:id="@+id/btn_edit"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Edit"
+            android:textColor="@color/brown"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/brown"
+            app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_delete"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/brown"
-            android:text="Order Now"
+            android:text="Delete"
             android:textColor="@android:color/white"
             app:cornerRadius="8dp" />
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
